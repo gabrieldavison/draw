@@ -1,16 +1,22 @@
-import { Ctx } from "./types/ctx";
-const getNextUniqueId = getIdGenerator();
+import { Ctx } from "./ctx";
 
 interface Subscriptions {
   [index: string]: { [index: number]: (...args: any[]) => any | void };
 }
 
+export interface EventBus {
+  subscribe: (
+    eventType: keyof Subscriptions,
+    callback: (ctx: Ctx) => any | void
+  ) => { unsubscribe: () => void };
+  publish: (eventType: keyof Subscriptions, ctx?: Ctx) => void;
+}
+
 const subscriptions: Subscriptions = {};
 
-export function subscribe(
-  eventType: keyof Subscriptions,
-  callback: (ctx: Ctx) => any | void
-) {
+const getNextUniqueId = getIdGenerator();
+
+export const subscribe: EventBus["subscribe"] = (eventType, callback) => {
   const id = getNextUniqueId();
   if (!subscriptions[eventType]) subscriptions[eventType] = {};
 
@@ -23,16 +29,16 @@ export function subscribe(
         delete subscriptions[eventType];
     },
   };
-}
+};
 
-export function publish(eventType: keyof Subscriptions, ctx?: Ctx) {
+export const publish: EventBus["publish"] = (eventType, ctx) => {
   if (!subscriptions[eventType]) return;
 
   Object.keys(subscriptions[eventType]).forEach((key) => {
     const keyNum = Number(key);
     subscriptions[eventType][keyNum](ctx);
   });
-}
+};
 
 function getIdGenerator() {
   let lastId = 0;

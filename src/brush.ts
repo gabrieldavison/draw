@@ -1,23 +1,14 @@
-import { Ctx } from "./types/ctx";
+import { Ctx } from "./ctx.js";
+import { EventBus } from "./eventBus";
 
-export const start = () => {
-  console.log("brush start");
-};
+interface Brush {
+  start: (ctx: Ctx) => void;
+  draw: (ctx: Ctx) => void;
+  stop: (ctx: Ctx) => void;
+}
 
-export const draw = (ctx: Ctx) => {
-  if (ctx.drawing) {
-    const brushWidth = 10;
-    const offset = brushWidth / 2;
-    const c = ctx.canvasContext;
-    c.fillRect(
-      ctx.mouseX - offset,
-      ctx.mouseY - offset,
-      brushWidth,
-      brushWidth
-    );
-  }
-};
-
-export const stop = () => {
-  console.log("brush stop");
+export const loadBrush = (eventBus: EventBus, brush: Brush) => {
+  eventBus.subscribe("draw", brush.draw);
+  eventBus.subscribe("down", brush.start);
+  eventBus.subscribe("up", brush.stop);
 };
