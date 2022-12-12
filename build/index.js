@@ -1,12 +1,8 @@
 import * as eventBus from "./eventBus.js";
-import * as sprayBrush from "./brushes/sprayBrush.js";
+import * as buildBrush from "./brushes/buildBrush.js";
 import { getContext, setContext } from "./ctx.js";
 import { loadBrush } from "./brush.js";
 import { onKeyDown } from "./keyboard.js";
-const cnv = document.getElementById("drawing-canvas");
-const canvasContext = cnv.getContext("2d");
-canvasContext.canvas.width = window.innerWidth;
-canvasContext.canvas.height = window.innerHeight;
 // event listeners
 document.addEventListener("mousedown", () => {
     eventBus.publish("down");
@@ -16,10 +12,13 @@ document.addEventListener("mouseup", () => {
     eventBus.publish("up");
     setContext({ drawing: false });
 });
-document.addEventListener("mousemove", (e) => {
+document.addEventListener("pointermove", (e) => {
+    const ctx = getContext();
+    console.log(e.pressure);
     setContext({
-        mouseX: e.clientX - cnv.offsetLeft,
-        mouseY: e.clientY - cnv.offsetTop,
+        mouseX: e.clientX - ctx.canvas.offsetLeft,
+        mouseY: e.clientY - ctx.canvas.offsetTop,
+        pressure: e.pressure,
     });
 });
 document.addEventListener("keydown", (e) => {
@@ -34,7 +33,7 @@ document.addEventListener("keyup", (e) => {
     setContext({ keyUp: e.key, keyHeld });
     eventBus.publish("keydown", getContext());
 });
-loadBrush(eventBus, sprayBrush); // Subscribes brush
+loadBrush(eventBus, buildBrush); // Subscribes brush
 eventBus.subscribe("keydown", onKeyDown);
 // drawing loop
 let frameCount = 0;
