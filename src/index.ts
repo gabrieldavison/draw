@@ -17,7 +17,6 @@ document.addEventListener("mouseup", () => {
 });
 document.addEventListener("pointermove", (e) => {
   const ctx = getContext();
-  console.log(e.pressure);
   setContext({
     mouseX: e.clientX - ctx.canvas.offsetLeft,
     mouseY: e.clientY - ctx.canvas.offsetTop,

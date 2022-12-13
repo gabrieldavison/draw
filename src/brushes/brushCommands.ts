@@ -10,50 +10,71 @@ Each cursor will have a parent that it is offset from
 import { Ctx } from "../ctx";
 type Command = { execute: () => void };
 
-interface Commander {
-  ctx: Ctx;
-  commands: (Command | Commander)[];
-  line(width: number, height: number): Commander;
-  newCursor(c: Commander): Commander;
-  execute(): void;
-}
-
-const lineCommand = (ctx: Ctx, width: number, height: number) => {
+const rectCommand = (
+  ctx: Ctx,
+  width: number,
+  height: number,
+  alpha: number = 1,
+  rotation: number = 0
+) => {
   return {
     execute: () => {
       const c = ctx.canvasContext;
-      const alpha = 0.1;
+      // const alpha = 0.1;
       c.fillStyle = `rgb(0,0,0,${alpha})`;
-      const x = Math.round(ctx.mouseX);
-      const y = Math.round(ctx.mouseY);
-      // const h = ctx.pressure * 100;
-      const h = height;
-      const hOffset = h / 2;
+      // const x = Math.round(ctx.mouseX);
+      // const y = Math.round(ctx.mouseY);
+      c.translate(Math.round(ctx.mouseX), Math.round(ctx.mouseY));
+      c.rotate((rotation * Math.PI) / 180);
       c.beginPath();
-      c.fillRect(x - width / 2, y - hOffset, width / 2, h);
+      c.fillRect(0 - width / 2, 0 - height / 2, width, height);
       c.closePath();
+      c.resetTransform();
     },
   };
 };
 
-export const cursor: (
-  ctx: Ctx,
-  offsetX?: number,
-  offsetY?: number
-) => Commander = (ctx, offsetX = 0, offsetY = 0) => {
-  return {
-    ctx: { ...ctx, mouseX: ctx.mouseX + offsetX, mouseY: ctx.mouseY - offsetY },
-    commands: [],
-    line(width: number, height: number) {
-      this.commands.push(lineCommand(this.ctx, width, height));
-      return this;
-    },
-    newCursor(c: Commander) {
+class Cursor {
+  ctx: Ctx;
+  commands: Command[];
+  rotation: number;
+  constructor(
+    ctx: Ctx,
+    offsetX: number = 0,
+    offsetY: number = 0,
+    rotation: number = 0
+  ) {
+    this.ctx = {
+      ...ctx,
+      mouseX: ctx.mouseX + offsetX,
+      mouseY: ctx.mouseY - offsetY,
+    };
+    this.commands = [];
+    this.rotation = rotation;
+  }
+  rect(width: number, height: number, alpha: number = 1, rotation: number = 0) {
+    this.commands.push(rectCommand(this.ctx, width, height, alpha, rotation));
+    return this;
+  }
+  rotate(amount: number) {
+    this.rotation = amount;
+    return this;
+  }
+  newCursor(c: Cursor | Cursor[]) {
+    if (Array.isArray(c)) {
+      this.commands.push(...c);
+    } else {
       this.commands.push(c);
-      return this;
-    },
-    execute() {
-      this.commands.forEach((c) => c.execute());
-    },
-  };
-};
+    }
+    return this;
+  }
+  execute() {
+    const cnv = this.ctx.canvasContext;
+    this.commands.forEach((c) => {
+      c.execute();
+    });
+  }
+}
+
+export const cursor = (ctx: Ctx, offsetX?: number, offsetY?: number) =>
+  new Cursor(ctx, offsetX, offsetY);
