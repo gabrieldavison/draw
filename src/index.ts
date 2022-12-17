@@ -5,6 +5,7 @@ import * as buildBrush from "./brushes/buildBrush.js";
 import { getContext, setContext } from "./ctx.js";
 import { loadBrush } from "./brush.js";
 import { onKeyDown } from "./keyboard.js";
+import { initUI } from "./ui/ui.js";
 
 // event listeners
 document.addEventListener("mousedown", () => {
@@ -50,3 +51,4 @@ const drawLoop = () => {
 };
 
 requestAnimationFrame(drawLoop);
+initUI(eventBus);

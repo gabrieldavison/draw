@@ -9,19 +9,19 @@ export const init = (ctx: Ctx) => {
 };
 
 export const draw = (ctx: Ctx) => {
-  const a = Array(3)
-    .fill(null)
-    .map((v, i) => {
-      return cursor(ctx).rect(
-        0.5,
-        Math.random() > 0.9 ? randBetween(0, 300) : randBetween(0, 30),
-        0.7,
-        randBetween(0, 365)
-      );
-    });
+  // const a = Array(3)
+  //   .fill(null)
+  //   .map((v, i) => {
+  //     return cursor(ctx).rect(
+  //       0.5,
+  //       Math.random() > 0.9 ? randBetween(0, 300) : randBetween(0, 30),
+  //       0.7,
+  //       randBetween(0, 365)
+  //     );
+  //   });
 
-  const b = cursor(ctx).newCursor(a);
-  // const b = cursor(ctx).rotate(33).rect(10, 100, 0.1);
+  // const b = cursor(ctx).newCursor(a);
+  const b = cursor(ctx).rect(20, 20);
 
   if (ctx.drawing) {
     b.execute();

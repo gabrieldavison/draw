@@ -69,7 +69,6 @@ class Cursor {
     return this;
   }
   execute() {
-    const cnv = this.ctx.canvasContext;
     this.commands.forEach((c) => {
       c.execute();
     });

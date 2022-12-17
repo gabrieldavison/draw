@@ -10,6 +10,7 @@ export interface EventBus {
     callback: (ctx: Ctx) => any | void
   ) => { unsubscribe: () => void };
   publish: (eventType: keyof Subscriptions, ctx?: Ctx) => void;
+  clearEvent: (eventType: keyof Subscriptions) => void;
 }
 
 const subscriptions: Subscriptions = {};
@@ -38,6 +39,10 @@ export const publish: EventBus["publish"] = (eventType, ctx) => {
     const keyNum = Number(key);
     subscriptions[eventType][keyNum](ctx);
   });
+};
+
+export const clearEvent: EventBus["clearEvent"] = (eventType) => {
+  delete subscriptions[eventType];
 };
 
 function getIdGenerator() {

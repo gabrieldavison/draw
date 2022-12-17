@@ -21,6 +21,9 @@ export const publish = (eventType, ctx) => {
         subscriptions[eventType][keyNum](ctx);
     });
 };
+export const clearEvent = (eventType) => {
+    delete subscriptions[eventType];
+};
 function getIdGenerator() {
     let lastId = 0;
     return function getNextUniqueId() {
