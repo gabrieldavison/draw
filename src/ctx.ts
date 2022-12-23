@@ -58,7 +58,6 @@ export const setContext = (ctx: CtxUpdate) => {
 };
 
 export const saveCanvas = () => {
-  console.log("save!!");
   const link = document.createElement("a");
   link.setAttribute("download", ".png");
   const date = new Date();
@@ -72,4 +71,11 @@ export const saveCanvas = () => {
     `${date.toLocaleDateString()}-${date.toLocaleTimeString()}.png`
   );
   link.click();
+};
+
+export const clearCanvas = () => {
+  const ctx = getContext();
+  canvasContext.fillStyle = "white";
+  canvasContext.fillRect(0, 0, canvas.width, canvas.height);
+  canvasContext.fillStyle = "black";
 };

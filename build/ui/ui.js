@@ -1,5 +1,5 @@
 import { cursor as c } from "../brushes/brushCommands.js";
-import { saveCanvas } from "../ctx.js";
+import { saveCanvas, clearCanvas } from "../ctx.js";
 export const initUI = (eventBus) => {
     const button1 = document.getElementById("button1");
     const button2 = document.getElementById("button2");
@@ -40,4 +40,5 @@ export const initUI = (eventBus) => {
     button4 === null || button4 === void 0 ? void 0 : button4.addEventListener("click", () => switchEditorState(3));
     buttonEval === null || buttonEval === void 0 ? void 0 : buttonEval.addEventListener("click", loadBrush);
     buttonSave === null || buttonSave === void 0 ? void 0 : buttonSave.addEventListener("click", saveCanvas);
+    buttonClear === null || buttonClear === void 0 ? void 0 : buttonClear.addEventListener("click", clearCanvas);
 };

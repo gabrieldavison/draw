@@ -1,7 +1,7 @@
 import { Ctx } from "../ctx";
 import { EventBus } from "../eventBus";
 import { cursor as c } from "../brushes/brushCommands.js";
-import { saveCanvas } from "../ctx.js";
+import { saveCanvas, clearCanvas } from "../ctx.js";
 
 export const initUI = (eventBus: EventBus) => {
   const button1 = document.getElementById("button1");
@@ -46,4 +46,5 @@ export const initUI = (eventBus: EventBus) => {
 
   buttonEval?.addEventListener("click", loadBrush);
   buttonSave?.addEventListener("click", saveCanvas);
+  buttonClear?.addEventListener("click", clearCanvas);
 };

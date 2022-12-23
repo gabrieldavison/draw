@@ -8,7 +8,10 @@ import { onKeyDown } from "./keyboard.js";
 import { initUI } from "./ui/ui.js";
 
 // event listeners
-document.addEventListener("mousedown", () => {
+document.addEventListener("mousedown", (e) => {
+  const node = e.target as HTMLElement;
+  const tagName = node.tagName;
+  if (tagName === "TEXTAREA" || tagName === "BUTTON") return;
   eventBus.publish("down");
   setContext({ drawing: true });
 });
