@@ -12,6 +12,7 @@ document.addEventListener("mousedown", (e) => {
   const node = e.target as HTMLElement;
   const tagName = node.tagName;
   if (tagName === "TEXTAREA" || tagName === "BUTTON") return;
+  e.preventDefault();
   eventBus.publish("down");
   setContext({ drawing: true });
 });

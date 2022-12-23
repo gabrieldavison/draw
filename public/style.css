@@ -36,13 +36,16 @@ body {
 
 /* UI */
 #ui {
-  margin: 10px;
+  margin:0px 10px 10px 10px;
 }
 #editor {
   display: block;
   width: 400px;
   height: 300px;
 }
-button {
+#ui > button {
   margin-top: 10px;
+}
+.ui-button {
+  margin:10px;
 }

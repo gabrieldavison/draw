@@ -5,7 +5,11 @@ export const onKeyDown = (ctx: Ctx) => {
     //   document.getElementById("image-container")?.classList.toggle("hide"),
     // a: () => console.log("hello"),
     // s: () => saveCanvas(),
-    Escape: () => document.getElementById("ui")?.classList.toggle("hide"),
+    Escape: () => {
+      document.getElementById("ui")?.classList.toggle("hide");
+      document.getElementById("buttonShow")?.classList.toggle("hide");
+      document.getElementById("buttonHide")?.classList.toggle("hide");
+    },
   };
   const callback = callbacks[ctx.keyDown];
   if (callback !== undefined) callback();
