@@ -4,8 +4,9 @@ import * as sprayBrush from "./brushes/sprayBrush.js";
 import * as buildBrush from "./brushes/buildBrush.js";
 import { getContext, setContext } from "./ctx.js";
 import { loadBrush } from "./brush.js";
-import { onKeyDown } from "./keyboard.js";
+import { onKeyDown, onKeyUp } from "./keyboard.js";
 import { initUI } from "./ui/ui.js";
+import { randBetween } from "./util.js";
 
 // event listeners
 document.addEventListener("mousedown", (e) => {
@@ -33,17 +34,25 @@ document.addEventListener("keydown", (e) => {
   const keyHeld = getContext().keyHeld;
   keyHeld[e.key] = true;
   setContext({ keyDown: e.key, keyHeld });
-  eventBus.publish("keyup", getContext());
+  eventBus.publish("keydown", getContext());
 });
 document.addEventListener("keyup", (e) => {
   const keyHeld = getContext().keyHeld;
   keyHeld[e.key] = false;
   setContext({ keyUp: e.key, keyHeld });
-  eventBus.publish("keydown", getContext());
+  eventBus.publish("keyup", getContext());
 });
 
 loadBrush(eventBus, buildBrush); // Subscribes brush
 eventBus.subscribe("keydown", onKeyDown);
+eventBus.subscribe("keyup", onKeyUp);
+
+declare global {
+  interface Window {
+    randBetween: any;
+  }
+}
+window.randBetween = randBetween;
 
 // drawing loop
 let frameCount = 0;

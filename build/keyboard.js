@@ -1,3 +1,4 @@
+import { clearScratchCanvas } from "./ctx.js";
 export const onKeyDown = (ctx) => {
     const callbacks = {
         // i: () =>
@@ -12,6 +13,14 @@ export const onKeyDown = (ctx) => {
         },
     };
     const callback = callbacks[ctx.keyDown];
+    if (callback !== undefined)
+        callback();
+};
+export const onKeyUp = (ctx) => {
+    const callbacks = {
+        " ": clearScratchCanvas,
+    };
+    const callback = callbacks[ctx.keyUp];
     if (callback !== undefined)
         callback();
 };

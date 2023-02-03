@@ -1,5 +1,4 @@
 # TODO
 
-- Add brush switching behaviour on button press
-- Plumb in a way to send parameters to brush
-- Add a way to use mouse X/Y to set brush parameter
+- Find a way to implement pressure support with a default value for non-pen users
+- Add a way to spawn multiple independent brushes

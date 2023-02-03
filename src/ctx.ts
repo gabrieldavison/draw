@@ -11,6 +11,7 @@ export interface Ctx {
   brushX: number;
   brushY: number;
   pressure: number;
+  scratchCanvasContext: CanvasRenderingContext2D;
 }
 
 interface CtxUpdate {
@@ -26,13 +27,23 @@ interface CtxUpdate {
   brushX?: number;
   brushY?: number;
   pressure?: number;
+  scratchCanvasContext?: CanvasRenderingContext2D;
 }
 const canvas = document.getElementById("drawing-canvas") as HTMLCanvasElement;
 const canvasContext = canvas.getContext("2d") as CanvasRenderingContext2D;
+const scratchCanvas = document.getElementById(
+  "scratch-canvas"
+) as HTMLCanvasElement;
+const scratchCanvasContext = scratchCanvas.getContext(
+  "2d"
+) as CanvasRenderingContext2D;
 canvasContext.canvas.width = window.innerWidth;
 canvasContext.canvas.height = window.innerHeight;
 canvasContext.fillStyle = "white";
 canvasContext.fillRect(0, 0, canvas.width, canvas.height);
+
+scratchCanvasContext.canvas.width = window.innerWidth;
+scratchCanvasContext.canvas.height = window.innerHeight;
 
 const store: Ctx = {
   canvas,
@@ -47,6 +58,7 @@ const store: Ctx = {
   brushX: 0,
   brushY: 0,
   pressure: 1,
+  scratchCanvasContext,
 };
 
 export const getContext = () => {
@@ -78,4 +90,13 @@ export const clearCanvas = () => {
   canvasContext.fillStyle = "white";
   canvasContext.fillRect(0, 0, canvas.width, canvas.height);
   canvasContext.fillStyle = "black";
+};
+export const clearScratchCanvas = () => {
+  scratchCanvasContext.fillStyle = "white";
+  scratchCanvasContext.clearRect(
+    0,
+    0,
+    scratchCanvas.width,
+    scratchCanvas.height
+  );
 };

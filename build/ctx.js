@@ -1,9 +1,13 @@
 const canvas = document.getElementById("drawing-canvas");
 const canvasContext = canvas.getContext("2d");
+const scratchCanvas = document.getElementById("scratch-canvas");
+const scratchCanvasContext = scratchCanvas.getContext("2d");
 canvasContext.canvas.width = window.innerWidth;
 canvasContext.canvas.height = window.innerHeight;
 canvasContext.fillStyle = "white";
 canvasContext.fillRect(0, 0, canvas.width, canvas.height);
+scratchCanvasContext.canvas.width = window.innerWidth;
+scratchCanvasContext.canvas.height = window.innerHeight;
 const store = {
     canvas,
     canvasContext,
@@ -17,6 +21,7 @@ const store = {
     brushX: 0,
     brushY: 0,
     pressure: 1,
+    scratchCanvasContext,
 };
 export const getContext = () => {
     return store;
@@ -38,4 +43,8 @@ export const clearCanvas = () => {
     canvasContext.fillStyle = "white";
     canvasContext.fillRect(0, 0, canvas.width, canvas.height);
     canvasContext.fillStyle = "black";
+};
+export const clearScratchCanvas = () => {
+    scratchCanvasContext.fillStyle = "white";
+    scratchCanvasContext.clearRect(0, 0, scratchCanvas.width, scratchCanvas.height);
 };

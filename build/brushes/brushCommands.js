@@ -1,11 +1,9 @@
+const getCurrentCanvas = (ctx) => ctx.keyHeld[" "] === true ? ctx.scratchCanvasContext : ctx.canvasContext;
 const rectCommand = (ctx, width, height, alpha = 1, rotation = 0) => {
     return {
         execute: () => {
-            const c = ctx.canvasContext;
-            // const alpha = 0.1;
+            const c = getCurrentCanvas(ctx);
             c.fillStyle = `rgb(0,0,0,${alpha})`;
-            // const x = Math.round(ctx.mouseX);
-            // const y = Math.round(ctx.mouseY);
             c.translate(Math.round(ctx.mouseX), Math.round(ctx.mouseY));
             c.rotate((rotation * Math.PI) / 180);
             c.beginPath();

@@ -10,6 +10,9 @@ Each cursor will have a parent that it is offset from
 import { Ctx } from "../ctx";
 type Command = { execute: () => void };
 
+const getCurrentCanvas = (ctx: Ctx) =>
+  ctx.keyHeld[" "] === true ? ctx.scratchCanvasContext : ctx.canvasContext;
+
 const rectCommand = (
   ctx: Ctx,
   width: number,
@@ -19,11 +22,8 @@ const rectCommand = (
 ) => {
   return {
     execute: () => {
-      const c = ctx.canvasContext;
-      // const alpha = 0.1;
+      const c = getCurrentCanvas(ctx);
       c.fillStyle = `rgb(0,0,0,${alpha})`;
-      // const x = Math.round(ctx.mouseX);
-      // const y = Math.round(ctx.mouseY);
       c.translate(Math.round(ctx.mouseX), Math.round(ctx.mouseY));
       c.rotate((rotation * Math.PI) / 180);
       c.beginPath();
