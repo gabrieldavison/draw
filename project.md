@@ -1,4 +1,3 @@
 # TODO
-
-- Find a way to implement pressure support with a default value for non-pen users
-- Add a way to spawn multiple independent brushes
+- Fix bug where pressure defaults to zero until you move the mouse 
+    - This means that brushes that use pressure wont start drawing until the mouse is moved

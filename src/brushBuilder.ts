@@ -1,5 +1,5 @@
 /*
-Want to implement a pattern where you can build up a list of commands
+I want to implement a pattern where you can build up a list of commands
 These commands make up the stroke of the brush
 
 Each command should also have a cursor which will be the XY position.
@@ -7,7 +7,7 @@ Each command should also have a cursor which will be the XY position.
 Each cursor will have a parent that it is offset from
 
 */
-import { Ctx } from "../ctx";
+import { Ctx } from "./ctx";
 type Command = { execute: () => void };
 
 const getCurrentCanvas = (ctx: Ctx) =>
@@ -17,19 +17,15 @@ const rectCommand = (
   ctx: Ctx,
   width: number,
   height: number,
-  alpha: number = 1,
-  rotation: number = 0
+  alpha: number = 1
 ) => {
   return {
     execute: () => {
       const c = getCurrentCanvas(ctx);
       c.fillStyle = `rgb(0,0,0,${alpha})`;
-      c.translate(Math.round(ctx.mouseX), Math.round(ctx.mouseY));
-      c.rotate((rotation * Math.PI) / 180);
       c.beginPath();
       c.fillRect(0 - width / 2, 0 - height / 2, width, height);
       c.closePath();
-      c.resetTransform();
     },
   };
 };
@@ -38,6 +34,9 @@ class Cursor {
   ctx: Ctx;
   commands: Command[];
   rotation: number;
+  isChild: boolean;
+  offsetX: number;
+  offsetY: number;
   constructor(
     ctx: Ctx,
     offsetX: number = 0,
@@ -46,14 +45,15 @@ class Cursor {
   ) {
     this.ctx = {
       ...ctx,
-      mouseX: ctx.mouseX + offsetX,
-      mouseY: ctx.mouseY - offsetY,
     };
+    this.offsetX = offsetX;
+    this.offsetY = offsetY;
     this.commands = [];
     this.rotation = rotation;
+    this.isChild = false;
   }
   rect(width: number, height: number, alpha: number = 1, rotation: number = 0) {
-    this.commands.push(rectCommand(this.ctx, width, height, alpha, rotation));
+    this.commands.push(rectCommand(this.ctx, width, height, alpha));
     return this;
   }
   rotate(amount: number) {
@@ -69,11 +69,37 @@ class Cursor {
     return this;
   }
   execute() {
+    this.ctx.canvasContext.save();
+    if (this.isChild) {
+      this.ctx.canvasContext.translate(this.offsetX, this.offsetY);
+    } else {
+      this.ctx.canvasContext.translate(
+        this.ctx.mouseX + this.offsetX,
+        this.ctx.mouseY + this.offsetY
+      );
+    }
+    this.ctx.canvasContext.rotate(this.rotation);
     this.commands.forEach((c) => {
       c.execute();
     });
+    this.ctx.canvasContext.restore();
+  }
+}
+
+class ChildCursor extends Cursor {
+  constructor(
+    ctx: Ctx,
+    offsetX: number = 0,
+    offsetY: number = 0,
+    rotation: number = 0
+  ) {
+    super(ctx, offsetX, offsetY, rotation);
+    this.isChild = true;
   }
 }
 
 export const cursor = (ctx: Ctx, offsetX?: number, offsetY?: number) =>
   new Cursor(ctx, offsetX, offsetY);
+
+export const childCursor = (ctx: Ctx, offsetX?: number, offsetY?: number) =>
+  new ChildCursor(ctx, offsetX, offsetY);

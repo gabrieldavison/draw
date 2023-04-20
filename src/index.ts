@@ -1,9 +1,6 @@
 import * as canvas from "./canvas.js";
 import * as eventBus from "./eventBus.js";
-import * as sprayBrush from "./brushes/sprayBrush.js";
-import * as buildBrush from "./brushes/buildBrush.js";
 import { getContext, setContext } from "./ctx.js";
-import { loadBrush } from "./brush.js";
 import { onKeyDown, onKeyUp } from "./keyboard.js";
 import { initUI } from "./ui/ui.js";
 import { randBetween } from "./util.js";
@@ -43,7 +40,6 @@ document.addEventListener("keyup", (e) => {
   eventBus.publish("keyup", getContext());
 });
 
-loadBrush(eventBus, buildBrush); // Subscribes brush
 eventBus.subscribe("keydown", onKeyDown);
 eventBus.subscribe("keyup", onKeyUp);
 

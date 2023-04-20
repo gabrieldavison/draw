@@ -1,7 +1,7 @@
-import { cursor as c } from "../brushes/brushCommands.js";
+import { cursor as c, childCursor as cc } from "../brushBuilder.js";
 import { saveCanvas, clearCanvas } from "../ctx.js";
+import { dc1, dc2, dc3, dc4 } from "./defaultCursors.js";
 export const initUI = (eventBus) => {
-    var _a;
     const buttonHide = document.getElementById("buttonHide");
     const buttonShow = document.getElementById("buttonShow");
     const button1 = document.getElementById("button1");
@@ -13,7 +13,8 @@ export const initUI = (eventBus) => {
     const buttonClear = document.getElementById("buttonClear");
     const editor = document.getElementById("editor");
     const message = document.getElementById("message");
-    const editorState = JSON.parse((_a = localStorage.getItem("editorState")) !== null && _a !== void 0 ? _a : '["", "", "", ""]');
+    const savedState = localStorage.getItem("editorState");
+    const editorState = savedState !== null ? JSON.parse(savedState) : [dc1, dc2, dc3, dc4];
     let currentEditorIndex = 0;
     editor.value = editorState[currentEditorIndex];
     const saveState = () => {
@@ -21,7 +22,6 @@ export const initUI = (eventBus) => {
         localStorage.setItem("editorState", JSON.stringify(editorState));
     };
     const switchEditorState = (bank) => {
-        // saveState();
         editor.value = editorState[bank];
         currentEditorIndex = bank;
     };
@@ -31,6 +31,7 @@ export const initUI = (eventBus) => {
     const loadBrush = () => {
         // Need to define cursor here for dynamic evaluation to work
         const cursor = c;
+        const childCursor = cc;
         const editorState = editor.value;
         eventBus.clearEvent("draw");
         eventBus.subscribe("draw", (ctx) => {
